@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git') {
+            steps {
+                echo 'git cloning'
+                git branch: 'main', credentialsId: 'githubid', url: 'https://github.com/samathaanugu/samathabatch8.git'
+            }
+        }
+        stage('maven') {
+            steps {
+                echo 'maven build'
+                sh 'mvn clean install'
+            }
+         }
+         stage('tomcat') {
+            steps {
+                echo 'maven build'
+                deploy adapters: [tomcat9(credentialsId: 'jenkins', path: '', url: 'http:10.20.30/21:8080')], contextPath: 'tomcat', war: ''
+            }
+         }
+}
+    }
